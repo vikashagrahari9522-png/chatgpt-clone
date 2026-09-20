@@ -12,15 +12,15 @@ const {
 } = require("../service/vector.service");
 
 function initSocketServer(httpServer) {
- const io = new Server(httpServer, {
-  cors: {
-    origin: "http://localhost:5173",
-    credentials: true,
-  },
-});
+  const io = new Server(httpServer, {
+    cors: {
+      origin: "https://chatgpt-clone-3akp.onrender.com",
+      credentials: true,
+    },
+  });
 
   // SOCKET AUTHENTICATION
-  
+
   io.use(async (socket, next) => {
     const cookies = cookie.parse(
       socket.handshake.headers?.cookie || ""
@@ -62,7 +62,7 @@ function initSocketServer(httpServer) {
   });
 
   // CONNECTION
-  
+
   io.on("connection", (socket) => {
     console.log(
       "User connected:",
@@ -70,7 +70,7 @@ function initSocketServer(httpServer) {
     );
 
     // AI MESSAGE
-   socket.on("ai-message", async (messagePayload) => {
+    socket.on("ai-message", async (messagePayload) => {
       console.log(
         "Message received:",
         messagePayload
@@ -80,7 +80,7 @@ function initSocketServer(httpServer) {
         const userId = socket.user._id;
 
         // VALIDATION
-       if (!messagePayload?.chat) {
+        if (!messagePayload?.chat) {
           return socket.emit("ai-error", {
             message: "Chat ID is required",
           });
@@ -94,7 +94,7 @@ function initSocketServer(httpServer) {
 
         // SAVE USER MESSAGE
         // + GENERATE USER VECTOR
-       const [userMessage, vectors] =
+        const [userMessage, vectors] =
           await Promise.all([
             messageModel.create({
               chat: messagePayload.chat,
@@ -127,7 +127,7 @@ function initSocketServer(httpServer) {
           );
         }
 
-       // SAVE USER MESSAGE
+        // SAVE USER MESSAGE
         // IN PINECONE
         await createMemory({
           vectors: vectors,
@@ -174,7 +174,7 @@ function initSocketServer(httpServer) {
               .lean(),
           ]);
 
-       // OLD -> NEW ORDER
+        // OLD -> NEW ORDER
         chatHistory.reverse();
 
         console.log(
@@ -207,8 +207,8 @@ function initSocketServer(httpServer) {
           stm
         );
 
-       // ADD LONG-TERM MEMORY
-       if (stm.length > 0) {
+        // ADD LONG-TERM MEMORY
+        if (stm.length > 0) {
           history.unshift({
             role: "user",
 
@@ -223,7 +223,7 @@ function initSocketServer(httpServer) {
           history
         );
 
-       // GENERATE AI RESPONSE
+        // GENERATE AI RESPONSE
         const aiResponse =
           await aiService.generateResponse(
             history
@@ -234,7 +234,7 @@ function initSocketServer(httpServer) {
           aiResponse
         );
 
-       // SEND AI RESPONSE TO USER FIRST
+        // SEND AI RESPONSE TO USER FIRST
         socket.emit("ai-response", {
           content: aiResponse,
           chat: messagePayload.chat,
@@ -245,8 +245,8 @@ function initSocketServer(httpServer) {
         );
 
         // SAVE AI RESPONSE AFTER SENDING
-         try {
-         // SAVE AI RESPONSE IN MONGODB
+        try {
+          // SAVE AI RESPONSE IN MONGODB
           const responseMessage =
             await messageModel.create({
               chat: messagePayload.chat,
@@ -261,7 +261,7 @@ function initSocketServer(httpServer) {
           );
 
           // GENERATE AI VECTOR
-         const responseVectors =
+          const responseVectors =
             await aiService.generateVectors(
               aiResponse
             );

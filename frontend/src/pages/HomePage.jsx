@@ -37,14 +37,14 @@ const HomePage = () => {
     const messages = currentChat?.messages || [];
 
     useEffect(() => {
-        const newSocket = io("http://localhost:3000", {
+        const newSocket = io("https://chatgpt-clone-3akp.onrender.com", {
             withCredentials: true,
         });
 
         socketRef.current = newSocket;
 
         axios
-            .get("http://localhost:3000/api/chat", {
+            .get("https://chatgpt-clone-3akp.onrender.com/api/chat", {
                 withCredentials: true,
             })
             .then((response) => {
@@ -59,8 +59,8 @@ const HomePage = () => {
                                 preview:
                                     chat.messages?.length
                                         ? chat.messages[
-                                              chat.messages.length - 1
-                                          ].content
+                                            chat.messages.length - 1
+                                        ].content
                                         : "No messages yet",
                                 messages: chat.messages || [],
                             }));
@@ -85,7 +85,7 @@ const HomePage = () => {
                 console.error(
                     "Error loading chats:",
                     error.response?.data ||
-                        error.message
+                    error.message
                 );
             });
 
@@ -160,7 +160,7 @@ const HomePage = () => {
 
         try {
             const response = await axios.post(
-                "http://localhost:3000/api/chat",
+                "https://chatgpt-clone-3akp.onrender.com/api/chat",
                 {
                     title: title.trim(),
                     messages: [],
@@ -206,7 +206,7 @@ const HomePage = () => {
             console.error(
                 "Error creating chat:",
                 error.response?.data ||
-                    error.message
+                error.message
             );
         }
     };
