@@ -14,7 +14,7 @@ const {
 function initSocketServer(httpServer) {
   const io = new Server(httpServer, {
     cors: {
-      origin: "https://chatgpt-clone-3akp.onrender.com",
+      origin: "http://localhost:5173",
       credentials: true,
     },
   });
