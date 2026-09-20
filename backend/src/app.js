@@ -17,4 +17,8 @@ app.use(cors({
 app.use('/api/auth', authRoutes)
 app.use('/api/chat', chatRoutes)
 
+app.get('/', (req, res) => {
+    res.send('ChatGPT Clone Backend is running');
+});
+
 module.exports = app
