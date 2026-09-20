@@ -33,7 +33,7 @@ const LoginPage = () => {
 
         try {
             const response = await axios.post(
-                "https://chatgpt-clone-3akp.onrender.com/api/auth/login",
+                "https://chatgpt-clone-gt6b.onrender.com/api/auth/login",
                 {
                     email: form.email.trim(),
                     password: form.password,

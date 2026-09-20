@@ -37,14 +37,14 @@ const HomePage = () => {
     const messages = currentChat?.messages || [];
 
     useEffect(() => {
-        const newSocket = io("https://chatgpt-clone-3akp.onrender.com", {
+        const newSocket = io("https://chatgpt-clone-gt6b.onrender.com", {
             withCredentials: true,
         });
 
         socketRef.current = newSocket;
 
         axios
-            .get("https://chatgpt-clone-3akp.onrender.com/api/chat", {
+            .get("https://chatgpt-clone-gt6b.onrender.com/api/chat", {
                 withCredentials: true,
             })
             .then((response) => {
@@ -160,7 +160,7 @@ const HomePage = () => {
 
         try {
             const response = await axios.post(
-                "https://chatgpt-clone-3akp.onrender.com/api/chat",
+                "https://chatgpt-clone-gt6b.onrender.com/api/chat",
                 {
                     title: title.trim(),
                     messages: [],
