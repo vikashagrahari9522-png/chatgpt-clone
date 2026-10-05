@@ -45,7 +45,7 @@ const HomePage = () => {
     // ==========================================
 
     useEffect(() => {
-        const newSocket = io("http://localhost:3000", {
+        const newSocket = io("https://chatgpt-clone-1-nps8.onrender.com", {
             withCredentials: true,
         });
 
@@ -56,7 +56,7 @@ const HomePage = () => {
         // ==========================================
 
         axios
-            .get("http://localhost:3000/api/chat", {
+            .get("https://chatgpt-clone-1-nps8.onrender.com/api/chat", {
                 withCredentials: true,
             })
             .then((response) => {
@@ -229,7 +229,7 @@ const HomePage = () => {
 
         try {
             const response = await axios.post(
-                "http://localhost:3000/api/chat",
+                "https://chatgpt-clone-1-nps8.onrender.com/api/chat",
                 {
                     title: title.trim(),
                     messages: [],
