@@ -10,7 +10,7 @@ const app = express();
 
 
 app.use(cors({
-    origin: "https://chatgpt-clone-indol-three.vercel.app",
+    origin: "https://chatgpt-clone-2xrf76xj1-vikash-76fc.vercel.app",
     credentials: true
 }))
 

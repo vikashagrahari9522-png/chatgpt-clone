@@ -14,7 +14,7 @@ const {
 function initSocketServer(httpServer) {
   const io = new Server(httpServer, {
     cors: {
-      origin: "https://chatgpt-clone-indol-three.vercel.app",
+      origin: "https://chatgpt-clone-2xrf76xj1-vikash-76fc.vercel.app",
       credentials: true,
     },
   });
