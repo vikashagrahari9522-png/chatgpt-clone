@@ -1,8 +1,63 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const starterMessages = [
+    {
+        id: "welcome",
+        role: "assistant",
+        content:
+            "Hello! I’m your AI companion. What would you like to work through today?",
+    },
+];
+
 const initialState = {
-    currentChatId: null,
-    chats: [],
+    currentChatId: 1,
+
+    chats: [
+        {
+            id: 1,
+            title: "Welcome to your workspace",
+            preview: "Hello! I’m your AI companion...",
+            messages: starterMessages,
+        },
+
+        {
+            id: 2,
+            title: "Ideas for a weekend project",
+            preview: "A few directions worth exploring...",
+            messages: [
+                {
+                    id: "2-user",
+                    role: "user",
+                    content: "Ideas for a weekend project",
+                },
+                {
+                    id: "2-assistant",
+                    role: "assistant",
+                    content:
+                        "A few directions worth exploring...",
+                },
+            ],
+        },
+
+        {
+            id: 3,
+            title: "Plan a healthier routine",
+            preview: "Start with one small habit...",
+            messages: [
+                {
+                    id: "3-user",
+                    role: "user",
+                    content: "Plan a healthier routine",
+                },
+                {
+                    id: "3-assistant",
+                    role: "assistant",
+                    content:
+                        "Start with one small habit...",
+                },
+            ],
+        },
+    ],
 };
 
 const chatSlice = createSlice({
@@ -12,10 +67,11 @@ const chatSlice = createSlice({
 
     reducers: {
         createChat(state, action) {
-            const { id } = action.payload;
+            const { id, title } = action.payload;
 
             state.chats.unshift({
-                id: id,
+                id,
+                title,
                 preview: "No messages yet",
                 messages: [],
             });
@@ -40,7 +96,15 @@ const chatSlice = createSlice({
 
             chat.messages.push(message);
 
-            chat.preview = message.content;
+            if (message.role === "user") {
+                if (chat.title === "New conversation") {
+                    chat.title = message.content;
+                }
+
+                chat.preview = message.content;
+            } else {
+                chat.preview = message.content;
+            }
         },
 
         setChats(state, action) {

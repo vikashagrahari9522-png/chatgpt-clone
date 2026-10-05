@@ -1,18 +1,31 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, createBrowserRouter } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import ProtectedRoute from './pages/ProtectedRoute';
 
-const AppRoutes = () => {
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/register" element={<RegisterPage />} />
-                <Route path="/login" element={<LoginPage />} />
-            </Routes>
-        </BrowserRouter>
-    );
-};
+export const AppRouter = createBrowserRouter([
+        {
+            path: "/",
+            element: <ProtectedRoute />,
+            children: [
+                {
+                    path: "/",
+                    element: <HomePage />
+                }
+            ]
+        },
+        {
+            path: "/register",
+            element: <RegisterPage />
+        },
+        {
+            path: "/login",
+            element: <LoginPage />
+        }
+]);
 
-export default AppRoutes;
+
+
+
+

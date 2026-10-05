@@ -33,7 +33,7 @@ const LoginPage = () => {
 
         try {
             const response = await axios.post(
-                "https://chatgpt-clone-gt6b.onrender.com/api/auth/login",
+                "http://localhost:3000/api/auth/login",
                 {
                     email: form.email.trim(),
                     password: form.password,
@@ -44,7 +44,7 @@ const LoginPage = () => {
             );
 
             console.log("Login successful:", response.data);
-
+            localStorage.setItem("user", JSON.stringify(response.data.user));
             setMessage("Login successful");
 
             setTimeout(() => {

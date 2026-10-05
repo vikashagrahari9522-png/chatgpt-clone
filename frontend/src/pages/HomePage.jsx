@@ -30,25 +30,40 @@ const HomePage = () => {
         (state) => state.chat
     );
 
+    // ==========================================
+    // CURRENT CHAT
+    // ==========================================
+
     const currentChat = chats.find(
-        (chat) => chat.id === currentChatId
+        (chat) => String(chat.id) === String(currentChatId)
     );
 
     const messages = currentChat?.messages || [];
 
+    // ==========================================
+    // SOCKET CONNECTION + LOAD CHATS
+    // ==========================================
+
     useEffect(() => {
-        const newSocket = io("https://chatgpt-clone-gt6b.onrender.com", {
+        const newSocket = io("http://localhost:3000", {
             withCredentials: true,
         });
 
         socketRef.current = newSocket;
 
+        // ==========================================
+        // LOAD EXISTING CHATS
+        // ==========================================
+
         axios
-            .get("https://chatgpt-clone-gt6b.onrender.com/api/chat", {
+            .get("http://localhost:3000/api/chat", {
                 withCredentials: true,
             })
             .then((response) => {
-                console.log("Chats loaded:", response.data);
+                console.log(
+                    "Chats loaded:",
+                    response.data
+                );
 
                 if (response.data?.chats) {
                     const backendChats =
@@ -89,6 +104,10 @@ const HomePage = () => {
                 );
             });
 
+        // ==========================================
+        // SOCKET CONNECT
+        // ==========================================
+
         newSocket.on("connect", () => {
             console.log(
                 "Socket connected:",
@@ -96,26 +115,54 @@ const HomePage = () => {
             );
         });
 
+        // ==========================================
+        // SOCKET ERROR
+        // ==========================================
+
         newSocket.on("connect_error", (error) => {
             console.error(
                 "Socket connection error:",
                 error.message
             );
+
+            setIsThinking(false);
         });
+
+        // ==========================================
+        // SOCKET DISCONNECT
+        // ==========================================
 
         newSocket.on("disconnect", (reason) => {
             console.log(
                 "Socket disconnected:",
                 reason
             );
+
+            setIsThinking(false);
         });
 
+        // ==========================================
+        // AI RESPONSE
+        // ==========================================
+
         newSocket.on("ai-response", (data) => {
-            console.log("AI response:", data);
+            console.log(
+                "AI response:",
+                data
+            );
 
             if (!data?.chat) {
                 console.error(
                     "AI response does not contain chat id"
+                );
+
+                setIsThinking(false);
+                return;
+            }
+
+            if (!data?.content) {
+                console.error(
+                    "AI response does not contain content"
                 );
 
                 setIsThinking(false);
@@ -136,17 +183,39 @@ const HomePage = () => {
             setIsThinking(false);
         });
 
+        // ==========================================
+        // AI ERROR
+        // ==========================================
+
         newSocket.on("ai-error", (data) => {
-            console.error("AI error:", data);
+            console.error(
+                "AI error:",
+                data
+            );
 
             setIsThinking(false);
         });
 
+        // ==========================================
+        // CLEANUP
+        // ==========================================
+
         return () => {
+            newSocket.off("connect");
+            newSocket.off("connect_error");
+            newSocket.off("disconnect");
+            newSocket.off("ai-response");
+            newSocket.off("ai-error");
+
             newSocket.disconnect();
+
             socketRef.current = null;
         };
     }, [dispatch]);
+
+    // ==========================================
+    // CREATE NEW CHAT
+    // ==========================================
 
     const handleNewChat = async () => {
         const title = window.prompt(
@@ -160,7 +229,7 @@ const HomePage = () => {
 
         try {
             const response = await axios.post(
-                "https://chatgpt-clone-gt6b.onrender.com/api/chat",
+                "http://localhost:3000/api/chat",
                 {
                     title: title.trim(),
                     messages: [],
@@ -199,6 +268,10 @@ const HomePage = () => {
                 })
             );
 
+            dispatch(
+                selectChat(chatId)
+            );
+
             setInput("");
             setIsThinking(false);
             setIsSidebarOpen(false);
@@ -210,6 +283,10 @@ const HomePage = () => {
             );
         }
     };
+
+    // ==========================================
+    // SELECT CHAT
+    // ==========================================
 
     const handleSelectChat = (chat) => {
         console.log(
@@ -224,24 +301,32 @@ const HomePage = () => {
             return;
         }
 
-        const chatId = String(chat.id);
+        const chatId =
+            String(chat.id);
 
         console.log(
             "SELECTED MONGODB CHAT ID:",
             chatId
         );
 
-        dispatch(selectChat(chatId));
+        dispatch(
+            selectChat(chatId)
+        );
 
         setInput("");
         setIsThinking(false);
         setIsSidebarOpen(false);
     };
 
+    // ==========================================
+    // SEND MESSAGE
+    // ==========================================
+
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        const trimmedInput = input.trim();
+        const trimmedInput =
+            input.trim();
 
         if (!trimmedInput) {
             return;
@@ -251,7 +336,8 @@ const HomePage = () => {
             return;
         }
 
-        const socket = socketRef.current;
+        const socket =
+            socketRef.current;
 
         if (!socket) {
             console.error(
@@ -274,7 +360,12 @@ const HomePage = () => {
             return;
         }
 
-        const chatId = String(currentChatId);
+        const chatId =
+            String(currentChatId);
+
+        // ==========================================
+        // DEBUG
+        // ==========================================
 
         console.log(
             "=============================="
@@ -299,6 +390,10 @@ const HomePage = () => {
             "=============================="
         );
 
+        // ==========================================
+        // USER MESSAGE
+        // ==========================================
+
         const userMessage = {
             id: Date.now(),
             role: "user",
@@ -315,19 +410,27 @@ const HomePage = () => {
         setInput("");
         setIsThinking(true);
 
+        // ==========================================
+        // SEND TO BACKEND
+        // ==========================================
+
         socket.emit("ai-message", {
             chat: chatId,
             content: trimmedInput,
         });
 
         console.log(
-            "Message sent to backend:",
+            "Message sent:",
             {
                 chat: chatId,
                 content: trimmedInput,
             }
         );
     };
+
+    // ==========================================
+    // UI
+    // ==========================================
 
     return (
         <main className="chat-page">
@@ -339,8 +442,12 @@ const HomePage = () => {
                 onClose={() =>
                     setIsSidebarOpen(false)
                 }
-                onNewChat={handleNewChat}
-                onSelectChat={handleSelectChat}
+                onNewChat={
+                    handleNewChat
+                }
+                onSelectChat={
+                    handleSelectChat
+                }
             />
 
             {isSidebarOpen && (

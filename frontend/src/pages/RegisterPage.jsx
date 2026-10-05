@@ -33,7 +33,7 @@ const RegisterPage = () => {
 
         try {
             const response = await axios.post(
-                "https://chatgpt-clone-gt6b.onrender.com/api/auth/register",
+                "http://localhost:3000/api/auth/register",
                 {
                     email: form.email.trim(),
                     fullName: {
