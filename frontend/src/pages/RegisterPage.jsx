@@ -33,7 +33,7 @@ const RegisterPage = () => {
 
         try {
             const response = await axios.post(
-                "https://chatgpt-clone-indol-three.vercel.app/api/auth/register",
+                "https://chatgpt-clone-1-nps8.onrender.com.app/api/auth/register",
                 {
                     email: form.email.trim(),
                     fullName: {
