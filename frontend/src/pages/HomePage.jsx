@@ -45,7 +45,7 @@ const HomePage = () => {
     // ==========================================
 
     useEffect(() => {
-        const newSocket = io("https://chatgpt-clone-1-nps8.onrender.com", {
+        const newSocket = io("https://chatgpt-clone-indol-three.vercel.app", {
             withCredentials: true,
         });
 
@@ -56,7 +56,7 @@ const HomePage = () => {
         // ==========================================
 
         axios
-            .get("https://chatgpt-clone-1-nps8.onrender.com/api/chat", {
+            .get("https://chatgpt-clone-indol-three.vercel.app/api/chat", {
                 withCredentials: true,
             })
             .then((response) => {
@@ -229,7 +229,7 @@ const HomePage = () => {
 
         try {
             const response = await axios.post(
-                "https://chatgpt-clone-1-nps8.onrender.com/api/chat",
+                "https://chatgpt-clone-indol-three.vercel.app/api/chat",
                 {
                     title: title.trim(),
                     messages: [],

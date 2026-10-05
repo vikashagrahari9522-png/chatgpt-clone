@@ -33,7 +33,7 @@ const LoginPage = () => {
 
         try {
             const response = await axios.post(
-                "https://chatgpt-clone-1-nps8.onrender.com/api/auth/login",
+                "https://chatgpt-clone-indol-three.vercel.app/api/auth/login",
                 {
                     email: form.email.trim(),
                     password: form.password,
