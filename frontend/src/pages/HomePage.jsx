@@ -47,6 +47,7 @@ const HomePage = () => {
     useEffect(() => {
         const newSocket = io("https://chatgpt-clone-1-nps8.onrender.com", {
             withCredentials: true,
+            transports: ["websocket", "polling"],
         });
 
         socketRef.current = newSocket;
