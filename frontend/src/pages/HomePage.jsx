@@ -56,7 +56,7 @@ const HomePage = () => {
         // ==========================================
 
         axios
-            .get("https://chatgpt-clone-1-nps8.onrender.com.ap/api/chat", {
+            .get("https://chatgpt-clone-1-nps8.onrender.com.app/api/chat", {
                 withCredentials: true,
             })
             .then((response) => {
