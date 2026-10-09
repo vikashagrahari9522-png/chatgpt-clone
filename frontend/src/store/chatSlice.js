@@ -1,63 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const starterMessages = [
-    {
-        id: "welcome",
-        role: "assistant",
-        content:
-            "Hello! I’m your AI companion. What would you like to work through today?",
-    },
-];
-
 const initialState = {
-    currentChatId: 1,
-
-    chats: [
-        {
-            id: 1,
-            title: "Welcome to your workspace",
-            preview: "Hello! I’m your AI companion...",
-            messages: starterMessages,
-        },
-
-        {
-            id: 2,
-            title: "Ideas for a weekend project",
-            preview: "A few directions worth exploring...",
-            messages: [
-                {
-                    id: "2-user",
-                    role: "user",
-                    content: "Ideas for a weekend project",
-                },
-                {
-                    id: "2-assistant",
-                    role: "assistant",
-                    content:
-                        "A few directions worth exploring...",
-                },
-            ],
-        },
-
-        {
-            id: 3,
-            title: "Plan a healthier routine",
-            preview: "Start with one small habit...",
-            messages: [
-                {
-                    id: "3-user",
-                    role: "user",
-                    content: "Plan a healthier routine",
-                },
-                {
-                    id: "3-assistant",
-                    role: "assistant",
-                    content:
-                        "Start with one small habit...",
-                },
-            ],
-        },
-    ],
+    currentChatId: null,
+    chats: [],
 };
 
 const chatSlice = createSlice({

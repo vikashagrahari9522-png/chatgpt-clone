@@ -57,7 +57,7 @@ const HomePage = () => {
         // ==========================================
 
         axios
-            .get("https://chatgpt-clone-1-nps8.onrender.com.app/api/chat", {
+            .get("https://chatgpt-clone-1-nps8.onrender.com/api/chat", {
                 withCredentials: true,
             })
             .then((response) => {
@@ -266,6 +266,7 @@ const HomePage = () => {
             dispatch(
                 createChat({
                     id: chatId,
+                    title: createdChat.title || title.trim(),
                 })
             );
 
@@ -323,7 +324,7 @@ const HomePage = () => {
     // SEND MESSAGE
     // ==========================================
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         const trimmedInput =
@@ -354,15 +355,41 @@ const HomePage = () => {
             return;
         }
 
-        if (!currentChatId) {
-            console.error(
-                "Please create or select a chat first"
-            );
-            return;
-        }
+        let chatId = String(currentChatId || "");
 
-        const chatId =
-            String(currentChatId);
+        if (!/^[a-f\d]{24}$/i.test(chatId)) {
+            setIsThinking(true);
+
+            try {
+                const response = await axios.post(
+                    "https://chatgpt-clone-1-nps8.onrender.com/api/chat",
+                    {
+                        title: trimmedInput.slice(0, 60),
+                        messages: [],
+                    },
+                    { withCredentials: true }
+                );
+
+                const createdChat = response.data?.chat;
+                if (!createdChat?._id) {
+                    throw new Error("Backend did not return chat _id");
+                }
+
+                chatId = String(createdChat._id);
+                dispatch(createChat({
+                    id: chatId,
+                    title: createdChat.title || trimmedInput.slice(0, 60),
+                }));
+                dispatch(selectChat(chatId));
+            } catch (error) {
+                console.error(
+                    "Error creating chat for message:",
+                    error.response?.data || error.message
+                );
+                setIsThinking(false);
+                return;
+            }
+        }
 
         // ==========================================
         // DEBUG
